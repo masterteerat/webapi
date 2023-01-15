@@ -24,8 +24,12 @@ def api():
 
         if cmd == "register":
             ret = register()
-        elif cmd == "menu":
-            ret = menu()
+        elif cmd == "order":
+            ret = order()
+        else:
+            return jsonify(
+		    result="an error has occured"
+	        )
 
  
         
@@ -49,15 +53,15 @@ def register():
     print('register has responded')
     
     return jsonify(
-		    result="ok"
+		    result="process complete"
     )        
 	
 
-def menu():
+def order():
 
     print('menu has responded')
     return jsonify(
-		    result="ok"
+		    result="process complete"
 	)
 
     
