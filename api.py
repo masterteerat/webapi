@@ -21,7 +21,8 @@ mycursor = mydb.cursor()
 def api():
     ret = jsonify
     if request.method == "POST": 
-        cmd = request.form["cmd"]
+        content = request.json
+        cmd = content["cmd"]
 
         if cmd == "register":
             ret = register()
@@ -42,9 +43,10 @@ def api():
 def register():
 
     try:
-        mid = request.form["mid"]
-        sid = request.form["sid"]
-        name = request.form["name"]
+        content = request.json
+        mid = content["mid"]
+        sid = content["sid"]
+        name = content["name"]
         sql = "INSERT INTO user (mid, sid, name) VALUES (%s, %s, %s)"
         val = (mid, sid, name)
         mycursor.execute(sql, val)
@@ -87,7 +89,8 @@ def order():
     
 def user():
 
-    mid = (request.form["mid"],)
+    content = request.json
+    mid = (content["mid"],)
 
     try:
         sql = "select sid, name from user where mid =%s"
