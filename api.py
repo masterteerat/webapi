@@ -28,8 +28,8 @@ def api():
             ret = register()
         elif cmd == "order":
             ret = order()
-        elif cmd == "user":
-            ret = user()
+        elif cmd == "checkuser":
+            ret = checkuser()
         else:
             return jsonify(
 		    result="an error has occured: command not found"
@@ -87,35 +87,42 @@ def order():
 	)
 
     
-def user():
+def checkuser():
 
     content = request.json
     mid = (content["mid"],)
+    status = "no"
+    name = "none"
+    sid = "none"
 
     try:
         sql = "select sid, name from user where mid =%s"
         mycursor.execute(sql, mid)
         record = mycursor.fetchone()   
-        print(record)
-        print(record[0])
-        print(record[1])
+        
+        sid = record[0]
+        name = record[1]
+        status = "yes"
+
     except ValueError as er:
         print("Function user: value error")
-        return jsonify(
-		    result="process failed"
-        )   
+        status = "no"
+    
     except TypeError as er:
         print("Function user: Type error")
-        return jsonify(
-            result="process failed"
-        )
+        status = "no"
 
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
         print('user has responded')
-        return jsonify(
-		    result="process failed"
-        )   
+        status = "no"
+    
     return jsonify(
-		    result="process complete"
+		    status=status,
+            name=name, 
+            sid=sid 
         )   
+
+
+
+    
