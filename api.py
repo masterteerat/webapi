@@ -90,14 +90,15 @@ def order():
 def checkuser():
 
     content = request.json
-    mid = (content["mid"],)
+    mid = content["mid"]
     status = "no"
     name = "none"
     sid = "none"
 
+    print(mid)
     try:
-        sql = "select sid, name from user where mid =%s"
-        mycursor.execute(sql, mid)
+        sql = "select sid, name from user where mid = %s ;"
+        mycursor.execute(sql, (mid,))
         record = mycursor.fetchone()   
         
         sid = record[0]
