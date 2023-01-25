@@ -5,6 +5,7 @@ from mysql.connector.errors import Error
 import mysql.connector
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 # Enable CORS
 CORS(app)
 
@@ -42,15 +43,19 @@ def api():
 
 def register():
 
+    status = "no"
+
     try:
         content = request.json
         mid = content["mid"]
         sid = content["sid"]
         name = content["name"]
+
         sql = "INSERT INTO user (mid, sid, name) VALUES (%s, %s, %s)"
         val = (mid, sid, name)
         mycursor.execute(sql, val)
         mydb.commit()
+        status = "yes"
     except ValueError as er:
         print("Function register: value error")
         return jsonify(
@@ -68,13 +73,10 @@ def register():
 		    result="process failed"
         )   
     
-    print(mid)
-    print(sid)
-    print(name)
-    print('register has responded')
+    
     
     return jsonify(
-		    result="process complete"
+		    status=status
     )        
 	
 
@@ -104,6 +106,7 @@ def checkuser():
         sid = record[0]
         name = record[1]
         status = "yes"
+        mydb.commit()
 
     except ValueError as er:
         print("Function user: value error")
