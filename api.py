@@ -50,6 +50,9 @@ def register():
         mid = content["mid"]
         sid = content["sid"]
         name = content["name"]
+        print(mid)
+        print(sid)
+        print(name)
 
         sql = "INSERT INTO user (mid, sid, name) VALUES (%s, %s, %s)"
         val = (mid, sid, name)
@@ -58,21 +61,15 @@ def register():
         status = "yes"
     except ValueError as er:
         print("Function register: value error")
-        return jsonify(
-		    result="process failed"
-        )   
+  
+          
     except TypeError as er:
         print("Function register: Type error")
-        return jsonify(
-            result="process failed"
-        )
+       
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
         print('register has responded')
-        return jsonify(
-		    result="process failed"
-        )   
-    
+      
     
     
     return jsonify(
@@ -82,17 +79,51 @@ def register():
 
 def order():
 
-    print('menu has responded')
+    content = request.json
+    mid = content["mid"]
+    name = content["name"]
+    prodid = content["prodid"]
+    imgresid = content["imgresid"]
+    description = content["description"]
+    quatity = content["quatity"]
+    price = content["price"]
+    totalprice = content["totalprice"]
+    prodstatus = content["prodstatus"]
+    
+    status = "no"
+    name = "none"
+    sid = "none"
+
+    try:
+        sql = "INSERT INTO orderlist (mid, name, prodid, imgresid, description, quantity, price, totalprice, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (mid, name, prodid, imgresid, description, quatity, price, totalprice, prodstatus)
+        mycursor.execute(sql, val)
+        mydb.commit()
+        status = "yes"
+
+    except ValueError as er:
+        print("Function user: value error")
+        status = "no"
+    
+    except TypeError as er:
+        print("Function user: Type error")
+        status = "no"
+
+    except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+        print('user has responded')
+        status = "no"
+    
     return jsonify(
-		    result="process complete"
-        
-	)
+		    status=status
+        )   
 
     
 def checkuser():
 
     content = request.json
     mid = content["mid"]
+    
     status = "no"
     name = "none"
     sid = "none"
