@@ -85,18 +85,17 @@ def order():
     prodid = content["prodid"]
     imgresid = content["imgresid"]
     description = content["description"]
-    quatity = content["quatity"]
+    quantity = content["quantity"]
     price = content["price"]
     totalprice = content["totalprice"]
     prodstatus = content["prodstatus"]
     
     status = "no"
-    name = "none"
-    sid = "none"
+    
 
     try:
         sql = "INSERT INTO orderlist (mid, name, prodid, imgresid, description, quantity, price, totalprice, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        val = (mid, name, prodid, imgresid, description, quatity, price, totalprice, prodstatus)
+        val = (mid, name, prodid, imgresid, description, quantity, price, totalprice, prodstatus)
         mycursor.execute(sql, val)
         mydb.commit()
         status = "yes"
