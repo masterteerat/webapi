@@ -38,7 +38,7 @@ def api():
 		    result="an error has occured: command not found"
 	        )
 
- 
+    print(ret)
         
     return ret,201
 	
@@ -257,6 +257,9 @@ def checkorder():
     totalprice = ""
     prodstatus = ""
     
+    print(id)
+    print(mid)
+
     try:
         
         sql = "select * from orderlist where mid = %s AND status != 'done' order by id limit " + id + " ,1"
