@@ -31,6 +31,8 @@ def api():
             ret = order()
         elif cmd == "checkuser":
             ret = checkuser()
+        elif cmd == "checkorder":
+            ret = checkorder()    
         else:
             return jsonify(
 		    result="an error has occured: command not found"
@@ -213,50 +215,8 @@ def order():
 		    status=status
         )	
 
-def order_org():
-
-    content = request.json
-    mid = content["mid"]
-    name = content["name"]
-    prodid = content["prodid"]
-    imgresid = content["imgresid"]
-    description = content["description"]
-    quantity = content["quantity"]
-    price = content["price"]
-    totalprice = content["totalprice"]
-    prodstatus = content["prodstatus"]
-    
-    status = "no"
-    
-
-    try:
-        sql = "INSERT INTO orderlist (mid, name, prodid, imgresid, description, quantity, price, totalprice, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        val = (mid, name, prodid, imgresid, description, quantity, price, totalprice, prodstatus)
-        mycursor.execute(sql, val)
-        mydb.commit()
-        status = "yes"
-
-    except ValueError as er:
-        print("Function user: value error")
-        status = "no"
-    
-    except TypeError as er:
-        print("Function user: Type error")
-        status = "no"
-
-    except mysql.connector.Error as err:
-        print("Something went wrong: {}".format(err))
-        print('user has responded')
-        status = "no"
-    
-    return jsonify(
-		    status=status
-        )   
 
 def insertorder(mid, name, prodid, imgresid, description, quantity, price, totalprice, prodstatus):
-
-   
-    
 
     try:
         sql = "INSERT INTO orderlist (mid, name, prodid, imgresid, description, quantity, price, totalprice, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -280,8 +240,69 @@ def insertorder(mid, name, prodid, imgresid, description, quantity, price, total
     
     return True
 
+def checkorder():
 
+    content = request.json
+    mid = content["mid"]
+    id = content["id"]
     
+    status = "no"
+    recid = ""
+    name = ""
+    prodid = ""
+    imgresid = ""
+    description = ""
+    quantity = ""
+    price = ""
+    totalprice = ""
+    prodstatus = ""
+    
+    try:
+        
+        sql = "select * from orderlist where mid = %s AND status != 'done' order by id limit " + id + " ,1"
+        mycursor.execute(sql, (mid,))
+        record = mycursor.fetchone()   
+        
+        recid = record[0]
+        name = record[3]
+        prodid = record[4]
+        imgresid = record[5]
+        description = record[6]
+        quantity = record[7]
+        price = record[8]
+        totalprice = record[9]
+        prodstatus = record[10]
+    
+        status = "yes"
+        mydb.commit()
+
+    except ValueError as er:
+        print("Function user: value error")
+        status = "no"
+    
+    except TypeError as er:
+        print("Function user: Type error")
+        status = "no"
+
+    except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+        print('user has responded')
+        status = "no"
+    
+    return jsonify(
+		    status=status,
+            recid=recid,
+            name=name,
+            prodid=prodid,
+            imgresid=imgresid,
+            description=description,
+            quantity=quantity,
+            price=price,
+            totalprice=totalprice,
+            prodstatus=prodstatus      
+        )
+
+
 def checkuser():
 
     content = request.json
