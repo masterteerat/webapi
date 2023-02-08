@@ -41,6 +41,8 @@ def api():
             ret = checkuser()
         elif cmd == "checkorder":
             ret = checkorder()    
+        elif cmd == "checkorderall":
+            ret = checkorderall() 
         else:
             return jsonify(
 		    result="an error has occured: command not found"
@@ -301,7 +303,7 @@ def checkorder():
     
     except TypeError as er:
         print("Function user: Type error")
-        status = "no"
+        status = "end"
 
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
@@ -364,5 +366,274 @@ def checkuser():
         )   
 
 
+def checkorderall():
+    mydb = g.cnx_pool.get_connection()
+    mycursor = mydb.cursor()
 
+    content = request.json
+    mid = content["mid"]
+    id = content["id"]
+    
+    status = "no"
+    recnum = "0"
+
+    recid0 = ""
+    name0 = ""
+    prodid0 = ""
+    imgresid0 = ""
+    description0 = ""
+    quantity0 = ""
+    price0 = ""
+    totalprice0 = ""
+    prodstatus0 = ""
+
+    recid1 = ""
+    name1 = ""
+    prodid1 = ""
+    imgresid1 = ""
+    description1 = ""
+    quantity1 = ""
+    price1 = ""
+    totalprice1 = ""
+    prodstatus1 = ""
+
+    recid2 = ""
+    name2 = ""
+    prodid2 = ""
+    imgresid2 = ""
+    description2 = ""
+    quantity2 = ""
+    price2 = ""
+    totalprice2 = ""
+    prodstatus2 = ""
+
+    recid3 = ""
+    name3 = ""
+    prodid3 = ""
+    imgresid3 = ""
+    description3 = ""
+    quantity3 = ""
+    price3 = ""
+    totalprice3 = ""
+    prodstatus3 = ""
+
+    recid4 = ""
+    name4 = ""
+    prodid4 = ""
+    imgresid4 = ""
+    description4 = ""
+    quantity4 = ""
+    price4 = ""
+    totalprice4 = ""
+    prodstatus4 = ""
+
+    recid5 = ""
+    name5 = ""
+    prodid5 = ""
+    imgresid5 = ""
+    description5 = ""
+    quantity5 = ""
+    price5 = ""
+    totalprice5 = ""
+    prodstatus5 = ""
+
+    recid6 = ""
+    name6 = ""
+    prodid6 = ""
+    imgresid6 = ""
+    description6 = ""
+    quantity6 = ""
+    price6 = ""
+    totalprice6 = ""
+    prodstatus6 = ""
+
+    recid7 = ""
+    name7 = ""
+    prodid7 = ""
+    imgresid7 = ""
+    description7 = ""
+    quantity7 = ""
+    price7 = ""
+    totalprice7 = ""
+    prodstatus7 = ""
+
+    recid8 = ""
+    name8 = ""
+    prodid8 = ""
+    imgresid8 = ""
+    description8 = ""
+    quantity8 = ""
+    price8 = ""
+    totalprice8 = ""
+    prodstatus8 = ""
+
+    recid9 = ""
+    name9 = ""
+    prodid9 = ""
+    imgresid9 = ""
+    description9 = ""
+    quantity9 = ""
+    price9 = ""
+    totalprice9 = ""
+    prodstatus9 = ""
+
+    recids = ["","","","","","","","","",""]
+    names = ["","","","","","","","","",""]
+    prodids = ["","","","","","","","","",""]
+    imgresids = ["","","","","","","","","",""]
+    descriptions = ["","","","","","","","","",""]
+    quantitys = ["","","","","","","","","",""]
+    prices = ["","","","","","","","","",""]
+    totalprices = ["","","","","","","","","",""]
+    prodstatuses = ["","","","","","","","","",""]
+
+
+    print(id)
+    print(mid)
+
+    try:
+
+        for x in range(10):
+                recids[x] = "0"
+                names[x] = ""
+                prodids[x] = ""
+                imgresids[x] = "0"
+                descriptions[x] = ""
+                quantitys[x] = "0"
+                prices[x] = "0"
+                totalprices[x] = "0"
+                prodstatuses[x] = ""
+
+        
+        sql = "select * from orderlist where mid = %s AND status != 'done' order by id limit 0,10"
+        mycursor.execute(sql, (mid,))
+        records = mycursor.fetchall()   
+        recnum = str(len(records))
+        
+        print("recnum = ",recnum)
+
+        x = 0
+        for record in records:
+      
+            recids[x] = str(record[0])
+            names[x] = str(record[3])
+            prodids[x] = str(record[4])
+            imgresids[x] = str(record[5])
+            descriptions[x] = str(record[6])
+            quantitys[x] = str(record[7])
+            prices[x] = str(record[8])
+            totalprices[x] = str(record[9])
+            prodstatuses[x] = str(record[10])
+            x = x+1
+    
+        status = "yes"
+        mydb.commit()
+
+    except ValueError as er:
+        print("Function user: value error")
+        status = "no"
+    
+    except TypeError as er:
+        print("Function user: Type error")
+        status = "end"
+
+    except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+        print('user has responded')
+        status = "no"
+    
+    return jsonify(
+		    status=status,
+            recnum=recnum,
+            recid0=recids[0],
+            name0=names[0],
+            prodid0=prodids[0],
+            imgresid0=imgresids[0],
+            description0=descriptions[0],
+            quantity0=quantitys[0],
+            price0=prices[0],
+            totalprice0=totalprices[0],
+            prodstatus0=prodstatuses[0],
+            recid1=recids[1],
+            name1=names[1],
+            prodid1=prodids[1],
+            imgresid1=imgresids[1],
+            description1=descriptions[1],
+            quantity1=quantitys[1],
+            price1=prices[1],
+            totalprice1=totalprices[1],
+            prodstatus1=prodstatuses[1],
+            recid2=recids[2],
+            name2=names[2],
+            prodid2=prodids[2],
+            imgresid2=imgresids[2],
+            description2=descriptions[2],
+            quantity2=quantitys[2],
+            price2=prices[2],
+            totalprice2=totalprices[2],
+            prodstatus2=prodstatuses[2],
+            recid3=recids[3],
+            name3=names[3],
+            prodid3=prodids[3],
+            imgresid3=imgresids[3],
+            description3=descriptions[3],
+            quantity3=quantitys[3],
+            price3=prices[3],
+            totalprice3=totalprices[3],
+            prodstatus3=prodstatuses[3],
+            recid4=recids[4],
+            name4=names[4],
+            prodid4=prodids[4],
+            imgresid4=imgresids[4],
+            description4=descriptions[4],
+            quantity4=quantitys[4],
+            price4=prices[4],
+            totalprice4=totalprices[4],
+            prodstatus4=prodstatuses[4], 
+            recid5=recids[5],
+            name5=names[5],
+            prodid5=prodids[5],
+            imgresid5=imgresids[5],
+            description5=descriptions[5],
+            quantity5=quantitys[5],
+            price5=prices[5],
+            totalprice5=totalprices[5],
+            prodstatus5=prodstatuses[5], 
+            recid6=recids[6],
+            name6=names[6],
+            prodid6=prodids[6],
+            imgresid6=imgresids[6],
+            description6=descriptions[6],
+            quantity6=quantitys[6],
+            price6=prices[6],
+            totalprice6=totalprices[6],
+            prodstatus6=prodstatuses[6], 
+            recid7=recids[7],
+            name7=names[7],
+            prodid7=prodids[7],
+            imgresid7=imgresids[7],
+            description7=descriptions[7],
+            quantity7=quantitys[7],
+            price7=prices[7],
+            totalprice7=totalprices[7],
+            prodstatus7=prodstatuses[7], 
+            recid8=recids[8],
+            name8=names[8],
+            prodid8=prodids[8],
+            imgresid8=imgresids[8],
+            description8=descriptions[8],
+            quantity8=quantitys[8],
+            price8=prices[8],
+            totalprice8=totalprices[8],
+            prodstatus8=prodstatuses[8],
+            recid9=recids[9],
+            name9=names[9],
+            prodid9=prodids[9],
+            imgresid9=imgresids[9],
+            description9=descriptions[9],
+            quantity9=quantitys[9],
+            price9=prices[9],
+            totalprice9=totalprices[9],
+            prodstatus9=prodstatuses[9],        
+        )
     
